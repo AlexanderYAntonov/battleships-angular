@@ -1,5 +1,7 @@
 <div class="container">
-  <button mat-fab color="warn">В бой!</button>
+  <button mat-fab color="warn" (click)="fight()" [disabled]="started">
+    В бой!
+  </button>
   <div class="playgrounds">
     <app-playground name="Team A" id="0"></app-playground>
     <app-playground name="Team B" id="1"></app-playground>

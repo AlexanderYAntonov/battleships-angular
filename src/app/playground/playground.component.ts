@@ -84,8 +84,7 @@ export class PlaygroundComponent implements OnInit {
     let x = 0;
     let y = 0;
     while (!placeOK) {
-      const rand = Math.random();
-      x = Math.floor(rand * N);
+      x = Math.floor(Math.random() * N);
       y = Math.floor(Math.random() * N);
       placeOK = this.checkPlace(ship, x, y, this.dataset.cells);
     }
