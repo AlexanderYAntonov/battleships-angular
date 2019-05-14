@@ -1,0 +1,18 @@
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.playgrounds {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  width: 80%;
+  padding-top: 20px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

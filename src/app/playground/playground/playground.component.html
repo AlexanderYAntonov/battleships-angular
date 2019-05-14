@@ -1,3 +1,23 @@
-<p>
-  playground works! {{name}}
-</p>
+<mat-card class="playground-card">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-title class="name">{{ name }}</mat-card-title>
+  </mat-card-header>
+  <div
+    class="wrapper"
+    [class.leftPlayground]="id === '0'"
+    [class.rightPlayground]="id !== '0'"
+  >
+    <div *ngFor="let row of dataset?.cells">
+      <div
+        *ngFor="let cell of row"
+        [class.cell]="true"
+        [class.sea]="cell === 0"
+        [class.ship]="cell === 1"
+      ></div>
+    </div>
+  </div>
+  <mat-card-content>
+    <p class="stats">Осталось {{ shipsLeft }} кораблей</p>
+  </mat-card-content>
+</mat-card>

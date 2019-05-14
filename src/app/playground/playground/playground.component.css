@@ -1,0 +1,43 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  min-width: 200px;
+}
+
+.playground-card {
+  margin-bottom: 20px;
+}
+
+.cell {
+  padding: 15px;
+  border: 1px solid grey;
+}
+
+.sea {
+  background: #42b8e3;
+}
+
+.ship {
+  background: #d18017;
+}
+
+.leftPlayground .ship {
+  background: #d18017;
+}
+
+.rightPlayground .ship {
+  background: red;
+}
+
+.name {
+  color: #5271eb;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.stats {
+  color: #5271eb;
+  font-size: 20px;
+  font-weight: normal;
+  padding-top: 10px;
+}
