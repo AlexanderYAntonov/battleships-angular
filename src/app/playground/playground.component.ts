@@ -50,29 +50,33 @@ export class PlaygroundComponent implements OnInit {
     return true;
   }
 
-  checkPlace(ship: Ship, x: number, y: number, cells: number[][]): boolean {
-    const size = ship.getSize();
-    const angle = ship.getAngle();
-    if (size === 1) {
-      // dot ship
-      return this.checkNearArea(x, y, cells);
-    }
-    if (size === 2) {
-      if (ship.getAngle() === 0 || ship.getAngle() === 0) {
-        return (
-          x < N - 1 &&
-          this.checkNearArea(x, y, cells) &&
-          this.checkNearArea(x + 1, y, cells)
-        );
-      } else {
-        return (
-          y < N - 1 &&
-          this.checkNearArea(x, y, cells) &&
-          this.checkNearArea(x, y + 1, cells)
-        );
+  check(size: number, angle: number, x: number, y: number, cells: number[][]) {
+    if (angle === 0 || angle === 180) {
+      if (x >= N - size + 1) {
+        return false;
+      }
+      for (let i = 0; i < size; i++) {
+        if (this.checkNearArea(x + i, y, cells) === false) {
+          return false;
+        }
+      }
+    } else {
+      if (y >= N - size + 1) {
+        return false;
+      }
+      for (let i = 0; i < size; i++) {
+        if (this.checkNearArea(x, y + i, cells) === false) {
+          return false;
+        }
       }
     }
     return true;
+  }
+
+  checkPlace(ship: Ship, x: number, y: number, cells: number[][]): boolean {
+    const size = ship.getSize();
+    const angle = ship.getAngle();
+    return this.check(size, angle, x, y, cells);
   }
 
   calcGoodCoordinates(ship: Ship): Coordinates {
@@ -84,9 +88,7 @@ export class PlaygroundComponent implements OnInit {
       x = Math.floor(rand * N);
       y = Math.floor(Math.random() * N);
       placeOK = this.checkPlace(ship, x, y, this.dataset.cells);
-      // console.log(`checked ${x} ${y} with res ${placeOK}`);
     }
-    console.log(`checked ${x} ${y} with res ${placeOK}`);
     return { x, y };
   }
 
@@ -103,23 +105,22 @@ export class PlaygroundComponent implements OnInit {
     this.shipsLeft++;
   }
 
-  setShips() {
-    for (let i = 0; i < 5; i++) {
-      const ship1 = new Ship(1);
-      const coords = this.calcGoodCoordinates(ship1);
-      ship1.placeShip(coords);
-      this.placeShip(ship1, coords);
-      this.ships.push(ship1);
-    }
-    for (let i = 0; i < 4; i++) {
-      const ship2 = new Ship(2);
+  createShips(count: number, size: number, rotatable: boolean) {
+    for (let i = 0; i < count; i++) {
+      const ship = new Ship(size);
       const times = Math.floor(Math.random() * 4);
-      ship2.rotateShip(times);
-      const coords = this.calcGoodCoordinates(ship2);
-      ship2.placeShip(coords);
-      this.placeShip(ship2, coords);
-      this.ships.push(ship2);
+      ship.rotateShip(times);
+      const coords = this.calcGoodCoordinates(ship);
+      ship.placeShip(coords);
+      this.placeShip(ship, coords);
+      this.ships.push(ship);
     }
+  }
+
+  setShips() {
+    this.createShips(3, 3, true);
+    this.createShips(4, 2, true);
+    this.createShips(5, 1, false);
   }
 
   setPlayground() {
