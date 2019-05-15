@@ -5,10 +5,10 @@
   </mat-card-header>
   <div
     class="wrapper"
-    [class.leftPlayground]="id === '0'"
-    [class.rightPlayground]="id !== '0'"
+    [class.leftPlayground]="own"
+    [class.rightPlayground]="!own"
   >
-    <div *ngFor="let row of dataset?.cells">
+    <div *ngFor="let row of playground?.cells">
       <div
         *ngFor="let cell of row"
         [class.cell]="true"
@@ -18,6 +18,6 @@
     </div>
   </div>
   <mat-card-content>
-    <p class="stats">Осталось {{ shipsLeft }} кораблей</p>
+    <p class="stats">Осталось {{ playground?.ships_left }} кораблей</p>
   </mat-card-content>
 </mat-card>

@@ -3,7 +3,15 @@
     В бой!
   </button>
   <div class="playgrounds">
-    <app-playground name="Team A" id="0"></app-playground>
-    <app-playground name="Team B" id="1"></app-playground>
+    <app-playground
+      name="Наш флот"
+      [own]="true"
+      [playground]="ownPlayground"
+    ></app-playground>
+    <app-playground
+      name="Вражеский флот"
+      [own]="false"
+      [playground]="enemyPlayground"
+    ></app-playground>
   </div>
 </div>

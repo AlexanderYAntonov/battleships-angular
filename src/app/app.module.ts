@@ -5,6 +5,7 @@ import { MatButtonModule, MatCardModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { PlaygroundComponent } from './playground/playground.component';
+import { PlaygroundService } from './services/playground.service';
 
 @NgModule({
   declarations: [AppComponent, PlaygroundComponent],
@@ -14,7 +15,7 @@ import { PlaygroundComponent } from './playground/playground.component';
     MatButtonModule,
     MatCardModule
   ],
-  providers: [],
+  providers: [PlaygroundService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
