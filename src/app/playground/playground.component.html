@@ -8,12 +8,14 @@
     [class.leftPlayground]="own"
     [class.rightPlayground]="!own"
   >
-    <div *ngFor="let row of playground?.cells">
+    <div *ngFor="let row of cells">
       <div
         *ngFor="let cell of row"
         [class.cell]="true"
         [class.sea]="cell === 0"
-        [class.ship]="cell === 1"
+        [class.ship]="cell >= 10 && cell < 100"
+        [class.wounded_ship]="cell === 2"
+        [class.fog]="cell === 3"
       ></div>
     </div>
   </div>

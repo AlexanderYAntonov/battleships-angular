@@ -21,6 +21,14 @@
   background: #d18017;
 }
 
+.wounded_ship {
+  background: orange;
+}
+
+.fog {
+  background: #f2e6e6;
+}
+
 .leftPlayground .ship {
   background: #d18017;
 }

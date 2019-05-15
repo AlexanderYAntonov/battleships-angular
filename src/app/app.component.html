@@ -7,11 +7,17 @@
       name="Наш флот"
       [own]="true"
       [playground]="ownPlayground"
+      [fog]="emptyFog"
+      [hadShoots]="ownHadShoots"
+      (click)="underAttack(true)"
     ></app-playground>
     <app-playground
       name="Вражеский флот"
       [own]="false"
       [playground]="enemyPlayground"
+      [fog]="fog"
+      [hadShoots]="enemyHadShoots"
+      (click)="underAttack(false)"
     ></app-playground>
   </div>
 </div>

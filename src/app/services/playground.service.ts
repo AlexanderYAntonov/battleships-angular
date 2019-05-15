@@ -3,6 +3,7 @@ import { Coordinates, Playground } from './../model';
 import { Ship } from './../ship/ship';
 
 const N = 10;
+const ATTACK_STATUS = { missed: 0, wounded: 1, killed: 2 };
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,55 @@ export class PlaygroundService {
   private enemyPlayground: Playground;
   private ownShips: Ship[];
   private enemyShips: Ship[];
+  private fog: number[][];
 
   constructor() {
     this.ownShips = [];
     this.enemyShips = [];
     this.ownPlayground = { cells: [] };
     this.enemyPlayground = { cells: [] };
+    this.fog = [];
+    for (let i = 0; i < N; i++) {
+      this.fog[i] = [];
+      for (let j = 0; j < N; j++) {
+        this.fog[i][j] = 0;
+      }
+    }
+    console.table(this.fog);
+  }
+
+  getFog() {
+    return this.fog;
+  }
+
+  getEmptyFog(): number[][] {
+    const emptyFog = [];
+    for (let i = 0; i < N; i++) {
+      emptyFog[i] = [];
+      for (let j = 0; j < N; j++) {
+        emptyFog[i][j] = 1;
+      }
+    }
+    return emptyFog;
+  }
+
+  clearFog(coords: Coordinates) {
+    this.fog[coords.x][coords.y] = 1;
+    console.log(`fog cleared`);
+  }
+
+  underAttack(playground: Playground, coords: Coordinates): number {
+    if (playground.cells[coords.x][coords.y] === 1) {
+      this.hurt(playground, coords);
+      return ATTACK_STATUS.wounded;
+    }
+    console.log(`missed!`);
+    return ATTACK_STATUS.missed;
+  }
+
+  hurt(playground: Playground, coords: Coordinates) {
+    playground.cells[coords.x][coords.y] = 2;
+    console.log(`Ouch!`);
   }
 
   createPlayground(own: boolean): Playground {
@@ -91,9 +135,9 @@ export class PlaygroundService {
     const angle = ship.getAngle();
     for (let i = 0; i < size; i++) {
       if (angle === 0 || angle === 180) {
-        cells[coords.x + i][coords.y] = 1;
+        cells[coords.x + i][coords.y] = ship.getId();
       } else {
-        cells[coords.x][coords.y + i] = 1;
+        cells[coords.x][coords.y + i] = ship.getId();
       }
     }
     // this.shipsLeft++;
@@ -104,23 +148,28 @@ export class PlaygroundService {
     ships: Ship[],
     count: number,
     size: number,
-    rotatable: boolean
-  ) {
+    rotatable: boolean,
+    id: number
+  ): number {
     for (let i = 0; i < count; i++) {
-      const ship = new Ship(size);
+      const ship = new Ship(size, id);
+      id++;
       const times = Math.floor(Math.random() * 4);
       ship.rotateShip(times);
       const coords = this.calcGoodCoordinates(cells, ship);
       ship.placeShip(coords);
       this.placeShip(cells, ship, coords);
       ships.push(ship);
+      console.log(`id = ${id}`);
     }
+    return id;
   }
 
   setShips(cells: number[][], ships: Ship[]): number {
-    this.createShips(cells, ships, 3, 3, true);
-    this.createShips(cells, ships, 4, 2, true);
-    this.createShips(cells, ships, 5, 1, false);
+    let id = 10;
+    id = this.createShips(cells, ships, 3, 3, true, id);
+    id = this.createShips(cells, ships, 4, 2, true, id);
+    id = this.createShips(cells, ships, 5, 1, false, id);
     return 3 + 4 + 5;
   }
 

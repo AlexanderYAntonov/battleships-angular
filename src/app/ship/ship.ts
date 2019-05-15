@@ -7,10 +7,14 @@ export class Ship {
   private y: number;
   private angle: number;
 
-  constructor(private size: number, private shape?: number) {
+  constructor(private size: number, private id: number) {
     this.isAlive = true;
     this.lifeAmount = size;
     this.angle = 0;
+  }
+
+  getId(): number {
+    return this.id;
   }
 
   destroyShip() {

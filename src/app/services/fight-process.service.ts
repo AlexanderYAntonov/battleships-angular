@@ -33,10 +33,11 @@ export class FightProcessService {
     this.canMakeTurn$.next(false);
   }
 
-  makeTurn() {
+  makeTurn(): Coordinates {
     const x = Math.floor(Math.random() * N);
     const y = Math.floor(Math.random() * N);
     this.shootCoords$.next({ x, y });
     console.log(`going to shoot into ${x} ${y}`);
+    return { x, y };
   }
 }
