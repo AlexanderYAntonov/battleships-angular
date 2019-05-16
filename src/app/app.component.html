@@ -9,7 +9,7 @@
       [playground]="ownPlayground"
       [fog]="emptyFog"
       [hadShoots]="ownHadShoots"
-      (click)="underAttack(true)"
+      (click)="underAttack(true, getRandomCoords())"
     ></app-playground>
     <app-playground
       name="Вражеский флот"
@@ -17,7 +17,7 @@
       [playground]="enemyPlayground"
       [fog]="fog"
       [hadShoots]="enemyHadShoots"
-      (click)="underAttack(false)"
+      (click)="underAttack(false, getRandomCoords())"
     ></app-playground>
   </div>
 </div>

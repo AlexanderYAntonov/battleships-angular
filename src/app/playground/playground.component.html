@@ -7,19 +7,38 @@
     class="wrapper"
     [class.leftPlayground]="own"
     [class.rightPlayground]="!own"
+    [class.finished]="playground?.status > 0"
+    [class.win]="playground?.status === 1"
+    [class.lose]="playground?.status === 2"
   >
-    <div *ngFor="let row of cells">
+    <div *ngFor="let row of playground?.cells">
       <div
         *ngFor="let cell of row"
         [class.cell]="true"
         [class.sea]="cell === 0"
         [class.ship]="cell >= 10 && cell < 100"
-        [class.wounded_ship]="cell === 2"
+        [class.wounded_ship]="cell % 1000 >= 110 && cell % 1000 < 200"
+        [class.destroyed_ship]="cell % 1000 >= 210 && cell % 1000 < 300"
         [class.fog]="cell === 3"
-      ></div>
+        [class.water_missed]="cell % 1000 === 100"
+        [class.last_shooted]="cell >= 1000"
+      >
+        <img
+          *ngIf="cell % 1000 > 100 && cell % 1000 < 200"
+          src="../../assets/damaged.png"
+        />
+        <img *ngIf="cell % 1000 === 100" src="../../assets/missed.png" />
+      </div>
     </div>
   </div>
   <mat-card-content>
-    <p class="stats">Осталось {{ playground?.ships_left }} кораблей</p>
+    <p
+      *ngIf="playground?.status === 0 && playground?.ships_left > 0"
+      class="stats"
+    >
+      Осталось {{ playground?.ships_left }} кораблей
+    </p>
+    <p *ngIf="playground?.status === 1" class="stats">Победа!</p>
+    <p *ngIf="playground?.status === 2" class="stats">Не повезло...</p>
   </mat-card-content>
 </mat-card>

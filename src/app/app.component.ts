@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { FightProcessService } from './services/fight-process.service';
 import { PlaygroundService } from './services/playground.service';
-import { Playground, Coordinates } from './model';
+import { Playground, Coordinates, ATTACK_STATUS } from './model';
 
 const N = 10;
 
@@ -12,7 +12,6 @@ const N = 10;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'battleships-angular';
   private canMakeTurn$: Observable<boolean>;
   private subscriptions: Subscription[] = [];
   private started = false;
@@ -27,7 +26,7 @@ export class AppComponent implements OnInit {
     private fightProcessService: FightProcessService,
     private playgroundService: PlaygroundService
   ) {
-    this.canMakeTurn$ = this.fightProcessService.getPermission();
+    // this.canMakeTurn$ = this.fightProcessService.getPermission();
   }
 
   ngOnInit() {
@@ -39,6 +38,8 @@ export class AppComponent implements OnInit {
 
   fight() {
     this.started = true;
+    this.ownPlayground = this.playgroundService.resetPlayground(true);
+    this.enemyPlayground = this.playgroundService.resetPlayground(false);
     /*this.subscriptions.push(
       this.canMakeTurn$.subscribe(permission => {
         if (permission) {
@@ -46,7 +47,7 @@ export class AppComponent implements OnInit {
         }
       })
     );*/
-    this.fightProcessService.makeTurn();
+    // this.fightProcessService.makeTurn();
   }
 
   getRandomCoords(): Coordinates {
@@ -55,20 +56,15 @@ export class AppComponent implements OnInit {
     return { x, y };
   }
 
-  underAttack(own: boolean) {
-    const coords = this.getRandomCoords();
-    if (own) {
-      console.log(`We're under attack!`);
-      this.playgroundService.underAttack(this.ownPlayground, coords);
-      this.ownHadShoots++;
-    } else {
-      console.log(`Enemy is under attack!`);
-      const result = this.playgroundService.underAttack(
-        this.enemyPlayground,
-        coords
-      );
-      this.playgroundService.clearFog(coords);
-      this.enemyHadShoots++;
+  underAttack(own: boolean, coords: Coordinates) {
+    if (this.started) {
+      const playground = own ? this.ownPlayground : this.enemyPlayground;
+      const result = this.playgroundService.underAttack(playground, coords);
+      if (result === ATTACK_STATUS.lose) {
+        const playgroundWin = !own ? this.ownPlayground : this.enemyPlayground;
+        this.playgroundService.finishGame(playgroundWin, playground);
+        this.started = false;
+      }
     }
   }
 }

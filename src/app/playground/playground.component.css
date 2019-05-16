@@ -9,11 +9,20 @@
 }
 
 .cell {
-  padding: 15px;
+  width: 30px;
+  height: 30px;
   border: 1px solid grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
 }
 
 .sea {
+  background: #42b8e3;
+}
+
+.water_missed {
   background: #42b8e3;
 }
 
@@ -22,7 +31,11 @@
 }
 
 .wounded_ship {
-  background: orange;
+  background: red;
+}
+
+.destroyed_ship {
+  background: black;
 }
 
 .fog {
@@ -34,7 +47,7 @@
 }
 
 .rightPlayground .ship {
-  background: red;
+  background: olivedrab;
 }
 
 .name {
@@ -48,4 +61,30 @@
   font-size: 20px;
   font-weight: normal;
   padding-top: 10px;
+}
+
+img {
+  width: 15px;
+  height: 15px;
+}
+
+.finished {
+  opacity: 0.3;
+}
+
+.win {
+  outline: 5px solid lightgreen;
+}
+
+.lose {
+  outline: 5px solid black;
+}
+
+.last_shooted {
+  outline: 5px solid greenyellow;
+  position: relative;
+}
+
+div {
+  transition: outline 500ms;
 }
