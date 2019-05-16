@@ -66,9 +66,9 @@ export class PlaygroundService {
     console.log(`fog cleared`);
   }
 
-  finishGame(playground_win: Playground, playground_lose: Playground) {
-    playground_lose.status = 2;
-    playground_win.status = 1;
+  finishGame(playgroundWin: Playground, playgroundLose: Playground) {
+    playgroundLose.status = 2;
+    playgroundWin.status = 1;
   }
 
   lose(playground: Playground) {

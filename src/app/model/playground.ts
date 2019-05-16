@@ -57,3 +57,21 @@ water just missed - 1100
 just wounded ship - 1110 - 1122
 just destroyed ship - 1210 - 1222
 */
+
+export const CELL_VALUES = {
+  sea: 0,
+  shipMin: 10,
+  shipMax: 99,
+  woundedShipMin: 110,
+  woundedShipMax: 199,
+  destroyedShipMin: 210,
+  destroyedShipMax: 299,
+  fog: 3,
+  waterMissed: 100,
+  waterJustMissed: 1100,
+  justWoundedShipMin: 1110,
+  justWoundedShipMax: 1199,
+  justDestroyedShipMin: 1210,
+  justDestroyedShipMax: 1299,
+  justShooted: 1000
+};

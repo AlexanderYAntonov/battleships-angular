@@ -15,13 +15,19 @@
       <div
         *ngFor="let cell of row"
         [class.cell]="true"
-        [class.sea]="cell === 0"
-        [class.ship]="cell >= 10 && cell < 100"
-        [class.wounded_ship]="cell % 1000 >= 110 && cell % 1000 < 200"
-        [class.destroyed_ship]="cell % 1000 >= 210 && cell % 1000 < 300"
-        [class.fog]="cell === 3"
-        [class.water_missed]="cell % 1000 === 100"
-        [class.last_shooted]="cell >= 1000"
+        [class.sea]="cell === cellValues.sea"
+        [class.ship]="cell >= cellValues.shipMin && cell <= cellValues.shipMax"
+        [class.wounded_ship]="
+          cell % 1000 >= cellValues.woundedShipMin &&
+          cell % 1000 <= cellValues.woundedShipMax
+        "
+        [class.destroyed_ship]="
+          cell % 1000 >= cellValues.destroyedShipMin &&
+          cell % 1000 <= cellValues.destroyedShipMax
+        "
+        [class.fog]="cell === cellValues.fog"
+        [class.water_missed]="cell % 1000 === cellValues.waterMissed"
+        [class.last_shooted]="cell >= cellValues.justShooted"
       >
         <img
           *ngIf="cell % 1000 > 100 && cell % 1000 < 200"
