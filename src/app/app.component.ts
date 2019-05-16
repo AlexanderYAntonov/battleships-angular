@@ -5,12 +5,13 @@ import {
   Coordinates,
   ATTACK_STATUS,
   WebSocketIncomingMessage,
-  WebSocketOutgoingMessage
+  WebSocketOutgoingMessage, InitialRequest
 } from './model';
+import {WsService} from './services/ws.service';
 
 const N = 10;
 
-const url = 'ws://localhost/ws';
+const url = 'ws://localhost:8081/ws';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ const url = 'ws://localhost/ws';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  private notReady = true;
   private started = false;
   private ownPlayground: Playground;
   private enemyPlayground: Playground;
@@ -28,13 +30,18 @@ export class AppComponent implements OnInit {
   private nameOwn = 'Команда А';
   private nameEnemy = 'Команда Б';
 
-  private socket: WebSocket;
+  private enemyReady = false;
+  private nameReady = false;
+
+  private socket: any;
   private startMessage: WebSocketOutgoingMessage = { started: true };
 
-  constructor(private playgroundService: PlaygroundService) {}
+  constructor(private playgroundService: PlaygroundService, private ws: WsService) {}
+
+
 
   ngOnInit() {
-    this.socket = new WebSocket(url);
+    this.socket = {}; //new WebSocket(url);
     this.socket.onopen = this.onSocketOpen;
     this.socket.onclose = this.onSocketClose;
     this.socket.onmessage = this.onSocketMessage;
@@ -44,12 +51,51 @@ export class AppComponent implements OnInit {
     this.emptyFog = this.playgroundService.getEmptyFog();
     this.ownPlayground = this.playgroundService.createPlayground(true);
     this.enemyPlayground = this.playgroundService.createPlayground(false);
+
+    this.ws.getObserver().subscribe( o => {
+        console.log(o);
+        this.onSocketMessage(o);
+      }
+    )
   }
 
   fight() {
     this.started = true;
     this.ownPlayground = this.playgroundService.resetPlayground(true);
     this.enemyPlayground = this.playgroundService.resetPlayground(false);
+
+
+    let initialRequest: InitialRequest = new class implements InitialRequest {
+      firstList: Coordinates[] = [];
+      zeroList: Coordinates[] = [];
+    };
+
+    this.ownPlayground.cells.map( v => {
+      v.map( c => {
+        if(c.value||0 > 0 ) {
+          initialRequest.zeroList.push(new class implements Coordinates {
+            x: number = c.x;
+            y: number = c.y;
+          })
+        }
+      })
+    });
+
+    this.enemyPlayground.cells.map( v => {
+      v.map( c => {
+        if(c.value||0 > 0 ) {
+          initialRequest.firstList.push(new class implements Coordinates {
+            x: number = c.x;
+            y: number = c.y;
+          })
+        }
+      })
+    });
+
+    this.ws.beginBattle(initialRequest).subscribe( r => {
+      console.log("Let's battle begin!");
+    });
+
     // this.socket.send(JSON.stringify(this.startMessage));
   }
 
@@ -86,27 +132,13 @@ export class AppComponent implements OnInit {
 
   onSocketMessage(event) {
     console.log(`got message ${event}`);
-    const message: WebSocketIncomingMessage = JSON.parse(event);
+    const message: WebSocketIncomingMessage = event;
     const plgrID = message.playgroundID ? message.playgroundID : 0;
     switch (message.type) {
       case 'started':
         // init both plgrs
         this.ownPlayground = this.playgroundService.createPlayground(true);
         this.enemyPlayground = this.playgroundService.createPlayground(false);
-        break;
-      case 'set_cells':
-        const cells = message.cells ? message.cells : [];
-        if (plgrID === 0) {
-          this.ownPlayground = this.playgroundService.setCells(
-            this.ownPlayground,
-            cells
-          );
-        } else {
-          this.enemyPlayground = this.playgroundService.setCells(
-            this.enemyPlayground,
-            cells
-          );
-        }
         break;
       case 'update_cell':
         const coords: Coordinates = {
@@ -129,8 +161,10 @@ export class AppComponent implements OnInit {
       case 'team_name':
         if (plgrID === 0) {
           this.nameOwn = message.name ? message.name : '';
+          this.nameReady = true;
         } else {
           this.nameEnemy = message.name ? message.name : '';
+          this.enemyReady = true;
         }
         break;
       case 'lose':

@@ -6,7 +6,7 @@ export interface BattleShip {
 }
 
 export interface Playground {
-  cells: number[][];
+  cells: Cell[][];
   score?: number;
   ships_left?: number;
   ships?: BattleShip[];
@@ -16,6 +16,23 @@ export interface Playground {
 export interface Coordinates {
   x: number;
   y: number;
+}
+
+export class Cell {
+  public value: number;
+  public x: number;
+  public y: number;
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+
+export interface InitialRequest {
+  zeroList: Coordinates[],
+  firstList: Coordinates[]
+
 }
 
 export const ATTACK_STATUS = {

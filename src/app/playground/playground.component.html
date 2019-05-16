@@ -15,25 +15,26 @@
       <div
         *ngFor="let cell of row"
         [class.cell]="true"
-        [class.sea]="cell === cellValues.sea"
-        [class.ship]="cell >= cellValues.shipMin && cell <= cellValues.shipMax"
+        [class.sea]="cell.value === cellValues.sea"
+        [class.ship]="cell.value >= cellValues.shipMin && cell.value <= cellValues.shipMax"
         [class.wounded_ship]="
-          cell % 1000 >= cellValues.woundedShipMin &&
-          cell % 1000 <= cellValues.woundedShipMax
+          cell.value % 1000 >= cellValues.woundedShipMin &&
+          cell.value % 1000 <= cellValues.woundedShipMax
         "
         [class.destroyed_ship]="
           cell % 1000 >= cellValues.destroyedShipMin &&
           cell % 1000 <= cellValues.destroyedShipMax
         "
-        [class.fog]="cell === cellValues.fog"
-        [class.water_missed]="cell % 1000 === cellValues.waterMissed"
-        [class.last_shooted]="cell >= cellValues.justShooted"
+        [class.fog]="cell.value === cellValues.fog"
+        [class.water_missed]="cell.value % 1000 === cellValues.waterMissed"
+        [class.last_shooted]="cell.value >= cellValues.justShooted"
       >
         <img
-          *ngIf="cell % 1000 > 100 && cell % 1000 < 200"
+          *ngIf="cell.value % 1000 > 100 && cell.value % 1000 < 200"
           src="../../assets/damaged.png"
         />
-        <img *ngIf="cell % 1000 === 100" src="../../assets/missed.png" />
+        <img *ngIf="cell.value % 1000 === 100" src="../../assets/missed.png" />
+        {{ cell.value }}
       </div>
     </div>
   </div>

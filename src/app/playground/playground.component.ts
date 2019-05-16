@@ -5,7 +5,7 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
-import { Playground, PLAYGROUND_STATUS, CELL_VALUES } from './../model';
+import {Playground, PLAYGROUND_STATUS, CELL_VALUES, Cell} from './../model';
 
 const N = 10;
 
@@ -23,7 +23,7 @@ export class PlaygroundComponent implements OnInit, OnChanges {
 
   private PLGRstatus = PLAYGROUND_STATUS;
   private cellValues = CELL_VALUES;
-  private cells: number[][];
+  private cells: Cell[][];
 
   // dataset$: Observable<Playground>;
 
@@ -32,7 +32,9 @@ export class PlaygroundComponent implements OnInit, OnChanges {
     for (let i = 0; i < N; i++) {
       this.cells[i] = [];
       for (let j = 0; j < N; j++) {
-        this.cells[i][j] = 3;
+        let c = new Cell(i, j);
+        c.value = 3;
+        this.cells[i][j] = c;
       }
     }
   }
@@ -42,7 +44,7 @@ export class PlaygroundComponent implements OnInit, OnChanges {
   applyFog() {
     for (let i = 0; i < N; i++) {
       for (let j = 0; j < N; j++) {
-        this.cells[i][j] = this.fog[i][j] ? this.playground.cells[i][j] : 3;
+        this.cells[i][j].value = this.fog[i][j] ? this.playground.cells[i][j].value : 3;
       }
     }
   }

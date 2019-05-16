@@ -4,7 +4,7 @@ import {
   Playground,
   BattleShip,
   ATTACK_STATUS,
-  PLAYGROUND_STATUS
+  PLAYGROUND_STATUS, Cell
 } from './../model';
 import { Ship } from './../ship/ship';
 
@@ -82,15 +82,15 @@ export class PlaygroundService {
   markShipAsDead(playground: Playground, shipID: number) {
     for (let i = 0; i < N; i++) {
       for (let j = 0; j < N; j++) {
-        if (playground.cells[i][j] % 100 === shipID) {
-          playground.cells[i][j] = 200 + shipID;
+        if (playground.cells[i][j].value % 100 === shipID) {
+          playground.cells[i][j].value = 200 + shipID;
         }
       }
     }
   }
 
   underAttack(playground: Playground, coords: Coordinates): number {
-    const cellValue = playground.cells[coords.x][coords.y];
+    const cellValue = playground.cells[coords.x][coords.y].value;
     if (cellValue >= 10 && cellValue < 100) {
       // identify ship id
       const shipID = cellValue - 10;
@@ -132,8 +132,8 @@ export class PlaygroundService {
   clearPreviousTarget(playground: Playground) {
     for (let i = 0; i < N; i++) {
       for (let j = 0; j < N; j++) {
-        if (playground.cells[i][j] >= 1000) {
-          playground.cells[i][j] -= 1000;
+        if (playground.cells[i][j].value >= 1000) {
+          playground.cells[i][j].value -= 1000;
         }
       }
     }
@@ -142,10 +142,10 @@ export class PlaygroundService {
   changeCellValue(playground: Playground, coords: Coordinates, delta: number) {
     this.clearPreviousTarget(playground);
 
-    playground.cells[coords.x][coords.y] += delta;
+    playground.cells[coords.x][coords.y].value += delta;
   }
 
-  checkNearArea(x: number, y: number, cells: number[][]): boolean {
+  checkNearArea(x: number, y: number, cells: Cell[][]): boolean {
     const xMin = x > 0 ? x - 1 : x;
     const xMax = x < N - 1 ? x + 1 : x;
     const yMin = y > 0 ? y - 1 : y;
@@ -153,7 +153,7 @@ export class PlaygroundService {
 
     for (let i = xMin; i <= xMax; i++) {
       for (let j = yMin; j <= yMax; j++) {
-        if (cells[i][j] !== 0) {
+        if (cells[i][j].value !== 0) {
           return false;
         }
       }
@@ -161,7 +161,7 @@ export class PlaygroundService {
     return true;
   }
 
-  check(size: number, angle: number, x: number, y: number, cells: number[][]) {
+  check(size: number, angle: number, x: number, y: number, cells: Cell[][]) {
     if (angle === 0 || angle === 180) {
       if (x >= N - size + 1) {
         return false;
@@ -184,13 +184,13 @@ export class PlaygroundService {
     return true;
   }
 
-  checkPlace(ship: Ship, x: number, y: number, cells: number[][]): boolean {
+  checkPlace(ship: Ship, x: number, y: number, cells: Cell[][]): boolean {
     const size = ship.getSize();
     const angle = ship.getAngle();
     return this.check(size, angle, x, y, cells);
   }
 
-  calcGoodCoordinates(cells: number[][], ship: Ship): Coordinates {
+  calcGoodCoordinates(cells: Cell[][], ship: Ship): Coordinates {
     let placeOK = false;
     let x = 0;
     let y = 0;
@@ -202,20 +202,20 @@ export class PlaygroundService {
     return { x, y };
   }
 
-  placeShip(cells: number[][], ship: Ship, coords: Coordinates) {
+  placeShip(cells: Cell[][], ship: Ship, coords: Coordinates) {
     const size = ship.getSize();
     const angle = ship.getAngle();
     for (let i = 0; i < size; i++) {
       if (angle === 0 || angle === 180) {
-        cells[coords.x + i][coords.y] = ship.getId();
+        cells[coords.x + i][coords.y].value = ship.getId();
       } else {
-        cells[coords.x][coords.y + i] = ship.getId();
+        cells[coords.x][coords.y + i].value = ship.getId();
       }
     }
   }
 
   createShips(
-    cells: number[][],
+    cells: Cell[][],
     ships: BattleShip[],
     count: number,
     size: number,
@@ -247,19 +247,21 @@ export class PlaygroundService {
     return 3 + 4 + 5;
   }
 
-  initCells(): number[][] {
-    const cells = [];
+  initCells(): Cell[][] {
+    const cells: Cell[][] = [];
     for (let i = 0; i < 10; i++) {
       const row = [];
       for (let j = 0; j < 10; j++) {
-        row.push(0);
+        let c = new Cell(i, j);
+        c.value = 0;
+        row.push(c);
       }
       cells.push(row);
     }
     return cells;
   }
 
-  setCells(playground: Playground, cells: number[][]): Playground {
+  setCells(playground: Playground, cells: Cell[][]): Playground {
     playground.cells = [];
     for (let i = 0; i < 10; i++) {
       const row = [];
@@ -272,6 +274,6 @@ export class PlaygroundService {
   }
 
   updateCell(playground: Playground, coords: Coordinates, value: number) {
-    playground.cells[coords.x][coords.y] = value;
+    playground.cells[coords.x][coords.y].value = value;
   }
 }
