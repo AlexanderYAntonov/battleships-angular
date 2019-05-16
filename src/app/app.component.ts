@@ -47,10 +47,10 @@ export class AppComponent implements OnInit {
   }
 
   fight() {
-    this.started = true;
+    /*this.started = true;
     this.ownPlayground = this.playgroundService.resetPlayground(true);
-    this.enemyPlayground = this.playgroundService.resetPlayground(false);
-    // this.socket.send(JSON.stringify(this.startMessage));
+    this.enemyPlayground = this.playgroundService.resetPlayground(false);*/
+    this.socket.send(JSON.stringify(this.startMessage));
   }
 
   getRandomCoords(): Coordinates {
