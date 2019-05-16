@@ -5,7 +5,7 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
-import { Playground } from './../model';
+import { Playground, PLAYGROUND_STATUS } from './../model';
 
 const N = 10;
 
@@ -21,6 +21,7 @@ export class PlaygroundComponent implements OnInit, OnChanges {
   @Input() fog: number[][];
   @Input() hadShoots: number;
 
+  private PLGRstatus = PLAYGROUND_STATUS;
   private cells: number[][];
 
   // dataset$: Observable<Playground>;

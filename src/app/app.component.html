@@ -4,7 +4,7 @@
   </button>
   <div class="playgrounds">
     <app-playground
-      name="Наш флот"
+      [name]="nameOwn"
       [own]="true"
       [playground]="ownPlayground"
       [fog]="emptyFog"
@@ -12,7 +12,7 @@
       (click)="underAttack(true, getRandomCoords())"
     ></app-playground>
     <app-playground
-      name="Вражеский флот"
+      [name]="nameEnemy"
       [own]="false"
       [playground]="enemyPlayground"
       [fog]="fog"

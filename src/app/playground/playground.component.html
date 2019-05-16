@@ -8,8 +8,8 @@
     [class.leftPlayground]="own"
     [class.rightPlayground]="!own"
     [class.finished]="playground?.status > 0"
-    [class.win]="playground?.status === 1"
-    [class.lose]="playground?.status === 2"
+    [class.win]="playground?.status === PLGRstatus.win"
+    [class.lose]="playground?.status === PLGRstatus.lose"
   >
     <div *ngFor="let row of playground?.cells">
       <div

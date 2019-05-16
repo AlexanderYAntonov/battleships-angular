@@ -26,6 +26,26 @@ export const ATTACK_STATUS = {
   duplicate: 4
 };
 
+export const PLAYGROUND_STATUS = {
+  undef: 0,
+  win: 1,
+  lose: 2
+};
+
+export interface WebSocketIncomingMessage {
+  type: string; // 'set_cells', 'update_cell', 'win', 'lose', 'started', 'team_name'
+  playgroundID: number; // 0 - left, 1 - right
+  value?: number; // cell value
+  x?: number; // cell x coordinate
+  y?: number; // cell y coordinate
+  cells?: number[][];
+  name?: string;
+}
+
+export interface WebSocketOutgoingMessage {
+  started: boolean; // when 'start' clicked
+}
+
 /*
 sea - 0
 ship - 10-22

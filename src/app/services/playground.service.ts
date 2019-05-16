@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Coordinates, Playground, BattleShip, ATTACK_STATUS } from './../model';
+import {
+  Coordinates,
+  Playground,
+  BattleShip,
+  ATTACK_STATUS,
+  PLAYGROUND_STATUS
+} from './../model';
 import { Ship } from './../ship/ship';
 
 const N = 10;
@@ -22,6 +28,22 @@ export class PlaygroundService {
         this.fog[i][j] = 0;
       }
     }
+  }
+
+  createPlayground(own: boolean): Playground {
+    const playground = own ? this.ownPlayground : this.enemyPlayground;
+    playground.cells = this.initCells();
+    playground.ships = [];
+    playground.score = 0;
+    playground.ships_left = 0;
+    playground.status = 0;
+    return playground;
+  }
+
+  resetPlayground(own: boolean): Playground {
+    const playground = this.createPlayground(own);
+    playground.ships_left = this.setShips(playground);
+    return playground;
   }
 
   getFog() {
@@ -47,6 +69,14 @@ export class PlaygroundService {
   finishGame(playground_win: Playground, playground_lose: Playground) {
     playground_lose.status = 2;
     playground_win.status = 1;
+  }
+
+  lose(playground: Playground) {
+    playground.status = PLAYGROUND_STATUS.lose;
+  }
+
+  win(playground: Playground) {
+    playground.status = PLAYGROUND_STATUS.win;
   }
 
   markShipAsDead(playground: Playground, shipID: number) {
@@ -113,22 +143,6 @@ export class PlaygroundService {
     this.clearPreviousTarget(playground);
 
     playground.cells[coords.x][coords.y] += delta;
-  }
-
-  createPlayground(own: boolean): Playground {
-    const playground = own ? this.ownPlayground : this.enemyPlayground;
-    playground.cells = this.initCells();
-    playground.ships = [];
-    playground.score = 0;
-    playground.ships_left = 0;
-    playground.status = 0;
-    return playground;
-  }
-
-  resetPlayground(own: boolean): Playground {
-    const playground = this.createPlayground(own);
-    playground.ships_left = this.setShips(playground);
-    return playground;
   }
 
   checkNearArea(x: number, y: number, cells: number[][]): boolean {
@@ -243,5 +257,21 @@ export class PlaygroundService {
       cells.push(row);
     }
     return cells;
+  }
+
+  setCells(playground: Playground, cells: number[][]): Playground {
+    playground.cells = [];
+    for (let i = 0; i < 10; i++) {
+      const row = [];
+      for (let j = 0; j < 10; j++) {
+        row.push(cells[i][j]);
+      }
+      playground.cells.push(row);
+    }
+    return playground;
+  }
+
+  updateCell(playground: Playground, coords: Coordinates, value: number) {
+    playground.cells[coords.x][coords.y] = value;
   }
 }
