@@ -55,6 +55,8 @@
   color: #5271eb;
   font-size: 20px;
   font-weight: bold;
+  text-overflow: ellipsis;
+  max-width: 250px;
 }
 
 .stats {
