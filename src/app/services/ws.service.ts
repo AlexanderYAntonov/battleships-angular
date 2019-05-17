@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { InitialRequest } from '../model';
 
-const url = 'http://comp2231.win.ftc.ru:8081/';
+const url = 'http://localhost:8081/';
 
 @Injectable()
 export class WsService {
