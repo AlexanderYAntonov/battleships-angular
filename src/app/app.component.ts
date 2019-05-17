@@ -41,11 +41,7 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit() {
-    this.socket = {}; //new WebSocket(url);
-    this.socket.onopen = this.onSocketOpen;
-    this.socket.onclose = this.onSocketClose;
-    this.socket.onmessage = this.onSocketMessage;
-    this.socket.onerror = this.onSocketError;
+
 
     this.fog = this.playgroundService.getFog();
     this.emptyFog = this.playgroundService.getEmptyFog();
@@ -117,21 +113,9 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onSocketOpen() {
-    console.log('WS connection established');
-  }
-
-  onSocketClose(event) {
-    if (event.wasClean) {
-      console.log('Connection closed successfully');
-    } else {
-      console.log('Connection lost');
-    }
-    console.log('Code: ' + event.code + ' reason: ' + event.reason);
-  }
 
   onSocketMessage(event) {
-    console.log(`got message ${event}`);
+
     const message: WebSocketIncomingMessage = event;
     const plgrID = message.playgroundID ? message.playgroundID : 0;
     switch (message.type) {
@@ -147,14 +131,11 @@ export class AppComponent implements OnInit {
         };
         const value = message.value ? message.value : 0;
         if (plgrID === 0) {
-          this.playgroundService.updateCell(this.ownPlayground, coords, value);
+          this.underAttack(true, coords)
+
           this.ownHadShoots++;
         } else {
-          this.playgroundService.updateCell(
-            this.enemyPlayground,
-            coords,
-            value
-          );
+          this.underAttack(false, coords)
           this.enemyHadShoots++;
         }
         break;

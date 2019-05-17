@@ -107,7 +107,7 @@ export class PlaygroundService {
         this.markShipAsDead(playground, shipID + 10);
         this.changeCellValue(playground, coords, 1000);
         // - check if ships count === 0
-        if (playground.ships_left === 11) {
+        if (playground.ships_left === 22) {
           return ATTACK_STATUS.lose;
         }
         return ATTACK_STATUS.destroyed;

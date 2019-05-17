@@ -1,10 +1,10 @@
 <div class="container">
   <!--"started||!(nameReady&&enemyReady)"-->
-  <button mat-fab color="warn" (click)="fight()" [disabled]="false">
+  <button mat-fab color="warn" (click)="fight()" [disabled]="started||!(nameReady&&enemyReady)">
     В бой!
   </button>
   <div class="playgrounds">
-    <app-playground *ngIf="nameReady||true"
+    <app-playground *ngIf="nameReady"
       [name]="nameOwn"
       [own]="true"
       [playground]="ownPlayground"
@@ -12,7 +12,7 @@
       [hadShoots]="ownHadShoots"
       (click)="underAttack(true, getRandomCoords())"
     ></app-playground>
-    <app-playground *ngIf="enemyReady||true"
+    <app-playground *ngIf="enemyReady"
       [name]="nameEnemy"
       [own]="false"
       [playground]="enemyPlayground"
