@@ -4,7 +4,8 @@ import {
   Playground,
   BattleShip,
   ATTACK_STATUS,
-  PLAYGROUND_STATUS, Cell
+  PLAYGROUND_STATUS,
+  Cell
 } from './../model';
 import { Ship } from './../ship/ship';
 
@@ -107,7 +108,7 @@ export class PlaygroundService {
         this.markShipAsDead(playground, shipID + 10);
         this.changeCellValue(playground, coords, 1000);
         // - check if ships count === 0
-        if (playground.ships_left === 22) {
+        if (playground.ships_left === 0) {
           return ATTACK_STATUS.lose;
         }
         return ATTACK_STATUS.destroyed;
@@ -252,7 +253,7 @@ export class PlaygroundService {
     for (let i = 0; i < 10; i++) {
       const row = [];
       for (let j = 0; j < 10; j++) {
-        let c = new Cell(i, j);
+        const c = new Cell(i, j);
         c.value = 0;
         row.push(c);
       }

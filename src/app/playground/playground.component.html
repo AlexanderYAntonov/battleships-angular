@@ -16,7 +16,9 @@
         *ngFor="let cell of row"
         [class.cell]="true"
         [class.sea]="cell.value === cellValues.sea"
-        [class.ship]="cell.value >= cellValues.shipMin && cell.value <= cellValues.shipMax"
+        [class.ship]="
+          cell.value >= cellValues.shipMin && cell.value <= cellValues.shipMax
+        "
         [class.wounded_ship]="
           cell.value % 1000 >= cellValues.woundedShipMin &&
           cell.value % 1000 <= cellValues.woundedShipMax
@@ -34,7 +36,6 @@
           src="../../assets/damaged.png"
         />
         <img *ngIf="cell.value % 1000 === 100" src="../../assets/missed.png" />
-
       </div>
     </div>
   </div>
